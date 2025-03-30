@@ -1,0 +1,17 @@
+.productsPage {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding: 2rem;
+}
+
+.categoryList {
+  display: flex;
+  gap: 1rem;
+}
+
+.productGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
