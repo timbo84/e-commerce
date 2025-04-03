@@ -1,17 +1,46 @@
 .productsPage {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
   padding: 2rem;
 }
 
-.categoryList {
+.controls {
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 2rem;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.searchInput {
+  flex: 1;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.categorySelect {
+  flex-basis: 200px;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 1.5rem;
+}
+
+.productCard {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 1rem;
+  border-radius: 8px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.productCard:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }

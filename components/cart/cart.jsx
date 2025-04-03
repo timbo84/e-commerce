@@ -1,29 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import styles from "./Cart.module.css";
-import Link from "next/link";
+
+const initialCartItems = [
+  { id: 1, name: "Wireless Headphones", price: 99.99, quantity: 1 },
+  { id: 2, name: "Smartwatch", price: 149.99, quantity: 2 },
+];
 
 export default function Cart() {
-  // Mock cart data
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 1,
-      name: "Wireless Headphones",
-      price: 99.99,
-      quantity: 1,
-      image: "/images/wireless-headphones.jpg",
-    },
-    {
-      id: 2,
-      name: "Smartwatch",
-      price: 149.99,
-      quantity: 2,
-      image: "/images/smartwatch.jpg",
-    },
-  ]);
+  const [cartItems, setCartItems] = useState(initialCartItems);
+  const router = useRouter();
 
-  // Helper functions
+  // Save updated cart to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem("cartItems", JSON.stringify(cartItems));
+  }, [cartItems]);
+
   const updateQuantity = (id, newQuantity) => {
     setCartItems((prevItems) =>
       prevItems.map((item) =>
@@ -34,6 +28,10 @@ export default function Cart() {
 
   const removeItem = (id) => {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
+  };
+
+  const handleCheckout = () => {
+    router.push("/checkout"); // Navigate to the checkout page
   };
 
   const calculateTotal = () => {
@@ -48,41 +46,35 @@ export default function Cart() {
       <div className={styles.cartItems}>
         {cartItems.map((item) => (
           <div key={item.id} className={styles.cartItem}>
-            <img src={item.image} alt={item.name} className={styles.image} />
-            <div className={styles.details}>
-              <h3>{item.name}</h3>
-              <p>${item.price.toFixed(2)}</p>
-              <div className={styles.quantity}>
-                <button
-                  onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  disabled={item.quantity <= 1}
-                >
-                  -
-                </button>
-                <span>{item.quantity}</span>
-                <button
-                  onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                >
-                  +
-                </button>
-              </div>
+            <span>{item.name}</span>
+            <span>${item.price.toFixed(2)}</span>
+            <div className={styles.quantity}>
               <button
-                className={styles.removeButton}
-                onClick={() => removeItem(item.id)}
+                onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                disabled={item.quantity <= 1}
               >
-                Remove
+                -
+              </button>
+              <span>{item.quantity}</span>
+              <button onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                +
               </button>
             </div>
+            <button
+              className={styles.removeButton}
+              onClick={() => removeItem(item.id)}
+            >
+              Remove
+            </button>
           </div>
         ))}
       </div>
       <div className={styles.total}>
-        <h3>Total: ${calculateTotal()}</h3>
-
-        <Link href="/checkout" className={styles.removeButton}>
-          Proceed To Checkout
-        </Link>
+        <strong>Total:</strong> ${calculateTotal()}
       </div>
+      <button className={styles.checkoutButton} onClick={handleCheckout}>
+        Proceed to Checkout
+      </button>
     </div>
   );
 }

@@ -1,0 +1,44 @@
+.confirmation {
+    padding: 2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  
+  .heading {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+  }
+  
+  .message {
+    margin-bottom: 2rem;
+    font-size: 1rem;
+  }
+  
+  .orderSummary,
+  .shippingDetails,
+  .nextSteps {
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+  
+  .cartItem {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+  
+  .total {
+    margin-top: 1rem;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+  
+  .shippingDetails p {
+    margin: 0.5rem 0;
+  }
+  
+  .nextSteps p {
+    font-size: 1rem;
+    line-height: 1.5;
+  }

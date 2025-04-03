@@ -1,25 +1,31 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import styles from './Checkout.module.css';
+import { useRouter } from "next/navigation"; // Ensure this import is correct
+import { useEffect, useState } from "react";
+import styles from "./Checkout.module.css";
 
 export default function Checkout() {
-  const cartItems = [
-    { id: 1, name: "Wireless Headphones", price: 99.99, quantity: 1 },
-    { id: 2, name: "Smartwatch", price: 149.99, quantity: 2 },
-  ];
+  const router = useRouter(); // Initialize the router object
 
+  const [cartItems, setCartItems] = useState([]);
   const [shippingInfo, setShippingInfo] = useState({
-    name: "",
-    address: "",
-    city: "",
-    zip: "",
+    name: "John Doe",
+    address: "123 Main St",
+    city: "Springfield",
+    zip: "12345",
   });
   const [paymentInfo, setPaymentInfo] = useState({
-    cardNumber: "",
-    expiry: "",
-    cvv: "",
+    cardNumber: "4111111111111111",
+    expiry: "12/25",
+    cvv: "123",
   });
+
+  useEffect(() => {
+    const savedCartItems = localStorage.getItem("cartItems");
+    if (savedCartItems) {
+      setCartItems(JSON.parse(savedCartItems));
+    }
+  }, []);
 
   const handleShippingChange = (e) => {
     setShippingInfo({ ...shippingInfo, [e.target.name]: e.target.value });
@@ -29,21 +35,28 @@ export default function Checkout() {
     setPaymentInfo({ ...paymentInfo, [e.target.name]: e.target.value });
   };
 
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0).toFixed(2);
-  };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Order submitted:", { shippingInfo, paymentInfo, cartItems });
-    alert("Thank you for your order!");
+
+    // Save shipping info to localStorage
+    localStorage.setItem("shippingInfo", JSON.stringify(shippingInfo));
+
+    // Redirect to confirmation page
+    router.push("/confirmation"); // Navigate to confirmation page
+  };
+
+  const calculateTotal = () => {
+    return cartItems
+      .reduce((total, item) => total + item.price * item.quantity, 0)
+      .toFixed(2);
   };
 
   return (
     <div className={styles.checkout}>
-      <h2 className={styles.checkoutHeading}>Checkout</h2>
+      <h2 className={styles.heading}>Checkout</h2>
       <form onSubmit={handleSubmit}>
-        <section className={styles.section}>
+        {/* Cart Summary Section */}
+        <section className={styles.cartSummary}>
           <h3>Cart Summary</h3>
           {cartItems.map((item) => (
             <div key={item.id} className={styles.cartItem}>
@@ -51,78 +64,87 @@ export default function Checkout() {
               <span>${(item.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
-          <div className={styles.cartTotal}>
+          <div className={styles.total}>
             <strong>Total:</strong> ${calculateTotal()}
           </div>
         </section>
 
-        <section className={styles.section}>
+        {/* Shipping Information Section */}
+        <section className={styles.shippingInfo}>
           <h3>Shipping Information</h3>
+          <label htmlFor="name">Full Name:</label>
           <input
+            id="name"
             type="text"
             name="name"
-            placeholder="Full Name"
             value={shippingInfo.name}
             onChange={handleShippingChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
+          <label htmlFor="address">Address:</label>
           <input
+            id="address"
             type="text"
             name="address"
-            placeholder="Address"
             value={shippingInfo.address}
             onChange={handleShippingChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
+          <label htmlFor="city">City:</label>
           <input
+            id="city"
             type="text"
             name="city"
-            placeholder="City"
             value={shippingInfo.city}
             onChange={handleShippingChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
+          <label htmlFor="zip">Zip Code:</label>
           <input
+            id="zip"
             type="text"
             name="zip"
-            placeholder="Zip Code"
             value={shippingInfo.zip}
             onChange={handleShippingChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
         </section>
 
-        <section className={styles.section}>
+        {/* Payment Information Section */}
+        <section className={styles.paymentInfo}>
           <h3>Payment Information</h3>
+          <label htmlFor="cardNumber">Card Number:</label>
           <input
+            id="cardNumber"
             type="text"
             name="cardNumber"
-            placeholder="Card Number"
             value={paymentInfo.cardNumber}
             onChange={handlePaymentChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
+          <label htmlFor="expiry">Expiry (MM/YY):</label>
           <input
+            id="expiry"
             type="text"
             name="expiry"
-            placeholder="Expiry (MM/YY)"
             value={paymentInfo.expiry}
             onChange={handlePaymentChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
+          <label htmlFor="cvv">CVV:</label>
           <input
+            id="cvv"
             type="text"
             name="cvv"
-            placeholder="CVV"
             value={paymentInfo.cvv}
             onChange={handlePaymentChange}
-            className={styles.shippingInput}
+            className={styles.input}
             required
           />
         </section>
